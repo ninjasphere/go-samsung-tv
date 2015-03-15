@@ -7,7 +7,7 @@ A list of possible commands is available from http://wiki.samygo.tv/index.php5/K
 
 This example will turn the volume up whenever the TV becomes contactable.
 
-```
+```go
 package main
 
 import (
