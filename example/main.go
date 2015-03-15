@@ -1,13 +1,3 @@
-# go-samsung-tv
-A simple golang package to control Samsung TVs over IP
-
-A list of possible commands is available from http://wiki.samygo.tv/index.php5/Key_codes
-
-### Example
-
-This example will turn the volume up whenever the TV becomes contactable.
-
-```
 package main
 
 import (
@@ -23,7 +13,7 @@ func main() {
 	tv := samsung.TV{
 		Host:            "192.168.0.21",
 		ApplicationID:   "go-samsung-tv",
-		ApplicationName: "Ninja Sphere         ", // XXX: Padding is required...
+		ApplicationName: "Ninja Sphere         ", // XXX: Need extra spaces or bits of "samsung remote" gets added on the end??
 	}
 
 	tv.OnPowerChange(time.Second*5, func(online bool) {
@@ -40,5 +30,3 @@ func main() {
 	})
 
 }
-
-```
