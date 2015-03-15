@@ -1,5 +1,13 @@
 # go-samsung-tv
-A simple golang package to control Samsung TVs over IP
+
+[![godoc](http://img.shields.io/badge/godoc-Reference-blue.svg)](https://godoc.org/github.com/ninjasphere/go-samsung-tv)
+[![MIT License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+[![Ninja Sphere](https://img.shields.io/badge/built%20by-ninja%20blocks-lightgrey.svg)](http://ninjablocks.com)
+
+---
+
+
+A simple golang package to control Samsung TVs over IP.
 
 A list of possible commands is available from http://wiki.samygo.tv/index.php5/Key_codes
 
