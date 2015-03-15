@@ -26,35 +26,46 @@ type TV struct {
 	ApplicationName string // ApplicationName is displayed on the screen the first time the ApplicationID is used.
 }
 
-// OnPowerChange allows you to monitor the on/off state. The provided callback will be fired whenever this TV goes online/offline.
-func (tv *TV) OnPowerChange(interval time.Duration, callback func(bool)) {
+// OnlineState allows you to monitor the on/off state. The returned channel will send a boolean indicating when the TV goes online/offline.
+func (tv *TV) OnlineState(interval time.Duration) chan bool {
 	log("Monitoring power state of TV %s", tv.Host)
-
-	address := fmt.Sprintf("%s:%d", tv.Host, port)
-
-	var err error
-	var conn net.Conn
 
 	var lastState *bool
 
-	for {
+	stateChannel := make(chan bool, 1)
 
-		// TODO: This should just be pinging, not connecting
-		conn, err = net.DialTimeout("tcp", address, interval)
+	go func() {
+		for {
+			online := tv.Online(interval)
 
-		online := err == nil
+			if lastState == nil || *lastState != online {
+				lastState = &online
 
-		if lastState == nil || *lastState != online {
-			callback(online)
-			lastState = &online
-		}
+				select {
+				case stateChannel <- online:
+					lastState = &online
+				default:
+					// Nothing is listening
+				}
 
-		if err == nil {
-			conn.Close()
+			}
+
 			time.Sleep(interval)
-		}
 
+		}
+	}()
+
+	return stateChannel
+}
+
+func (tv *TV) Online(timeout time.Duration) bool {
+	// TODO: This should just be pinging, not connecting
+	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", tv.Host, port), timeout)
+	if conn != nil {
+		conn.Close()
 	}
+
+	return err == nil
 }
 
 // SendCommand sends a single named command to the TV.
